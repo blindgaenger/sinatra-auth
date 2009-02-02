@@ -7,7 +7,7 @@ require 'auth'
 
 use Sinatra::Auth::Basic do |username, password|
 	puts "#{username} : #{password}"
-	user == 'lala'
+  username == 'user' && password = 'pass'
 end
 
 configure do
@@ -28,12 +28,13 @@ get '/auth_direct' do
 end
 
 get '/auth_method' do
-  auth
   '<h1>Auth</h1>'
 end
 
-protect do
+auth do
   get '/auth_block' do
+    p "req: #{@request.inspect}"
+    p "res: #{@response.inspect}"    
     '<h1>Auth</h1>'
   end
 end
@@ -46,3 +47,4 @@ end
 p "all paths:  #{Sinatra.application.events[:get][1..-1].map {|e| e.path}.inspect}"
 p "auth_paths: #{Sinatra.options.auth_paths.inspect}"
 
+p Sinatra.application.pipeline
