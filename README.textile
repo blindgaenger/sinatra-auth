@@ -45,6 +45,7 @@ checks your creditals.
 
 Define your routes as usual, but now you can @protect@ some of them.
 
+<pre><code>
   get '/public' do
     'free'
   end
@@ -54,6 +55,7 @@ Define your routes as usual, but now you can @protect@ some of them.
       'secret'
     end
   end
+</code></pre>
 
 Done!
 
