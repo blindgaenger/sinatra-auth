@@ -1,8 +1,11 @@
 h1. Sinatra-Auth
 
 I know, I know! There are already some implementations out there. Please don't 
-ask me why ... I just did it! Just let me put my stuff to all the other projects, 
-ok? Now it's up to you. :)
+ask me why ... I just did it!
+
+h2. Your choice
+
+Just let me put my stuff to all the other projects, ok? Now it's up to you. :)
 
 * "Sinatra Basic Authentication - Selectively Applied":http://www.gittr.com/index.php/archive/sinatra-basic-authentication-selectively-applied/
   <br/>You'll find similar *DIY* implementations in many sinatra projects (e.g. sinatra-wiki, ...)
