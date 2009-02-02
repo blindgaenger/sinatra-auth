@@ -1,3 +1,5 @@
+$LOAD_PATH.unshift "spec"
+
 require 'rubygems'
 require 'sinatra'
 require 'sinatra/test/rspec'
@@ -58,12 +60,17 @@ describe Sinatra::Auth do
       Sinatra::Auth::Basic.auth_paths.should == ["/private"]
     end
 
-    it "routes can be set with the auth helper" do
+    it "routes can be set with the protect helper" do
+      configure do
+        auth :basic do
+        end
+      end
+    
       get '/public' do
         'free'
       end
 
-      auth do
+      protect do
         get '/private' do
           'secret'
         end
@@ -77,7 +84,7 @@ describe Sinatra::Auth do
         'another free'
       end
       
-      auth do
+      protect do
         get '/still_private' do
           'still secret'
         end
@@ -89,6 +96,17 @@ describe Sinatra::Auth do
 
       Sinatra::Auth::Basic.auth_paths.should == ["/private", "/another_private", "/still_private"]
     end
+    
+    it "should fail if no auth method was configured" do
+      lambda {
+        protect do
+          get '/private' do
+            'secret'
+          end
+        end
+      }.should raise_error(RuntimeError)
+    end
+    
   end #configuration
   
   
@@ -96,13 +114,15 @@ describe Sinatra::Auth do
 
     it "should authenticate using the defined authenticator" do
       @called = false
-    
-      use Sinatra::Auth::Basic do |username, password|
-        @called = true
-        username == USERNAME && password = PASSWORD
+
+      configure do
+        auth :basic do |username, password|
+          @called = true
+          username == USERNAME && password = PASSWORD
+        end
       end
-      
-      auth do
+
+      protect do
         get '/private' do
           'secret'
         end
@@ -122,16 +142,18 @@ describe Sinatra::Auth do
     end    
 
 
-    it "should authenticate only the auth routes" do
-      use Sinatra::Auth::Basic do |username, password|
-        username == USERNAME && password = PASSWORD
-      end
+    it "should authenticate only the protected routes" do
+      configure do
+        auth :basic do |username, password|
+          username == USERNAME && password = PASSWORD
+        end
+      end    
     
       get '/public' do
         'free'
       end
 
-      auth do
+      protect do
         get '/private' do
           'secret'
         end
@@ -145,7 +167,7 @@ describe Sinatra::Auth do
         'another free'
       end
       
-      auth do
+      protect do
         get '/still_private' do
           'still secret'
         end
@@ -172,6 +194,29 @@ describe Sinatra::Auth do
 
       get_it '/still_public'
       response_should_be 200, "still free"
+    end
+
+    it "should work after reloading in development" do
+      app_file = "reloadable.rb"
+      load app_file
+
+      get_it '/public'
+      response_should_be 200, "free"
+    
+      get_it '/private'
+      response_should_be 401, ""
+
+      Sinatra.options.app_file = app_file
+      Sinatra.application.reload!
+
+      get_it '/public'
+      response_should_be 200, "free"
+    
+      get_it '/private'
+
+      pending do
+        response_should_be 401, ""
+      end
     end
 
   end #authentication

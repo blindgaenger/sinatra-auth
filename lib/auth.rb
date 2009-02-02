@@ -1,7 +1,6 @@
 require 'rubygems'
 require 'facets/kernel'
 
-
 module Sinatra
   module Auth
 
@@ -31,42 +30,42 @@ module Sinatra
 	    end
 	    
 	    def self.add_auth_paths(*paths)
-        Sinatra.options.auth_paths = (auth_paths << paths).flatten!
+        Sinatra.options.auth_paths = (auth_paths << paths.flatten).flatten.uniq
 	    end
     end
 
     module Helpers
+    
+      def auth(method, realm=nil, &authenticator)
+        Sinatra.options.auth_realm = realm
+        raise "please define a block as authenticator method" if authenticator.nil?
+        use Basic, &authenticator
+        @__configured_auth__ = true
+      end
+
       #
       # ugly, but it works
-      def auth
-        @app = Sinatra.application
-        class << @app
+      def protect(&block)
+        raise "authorize wasn't configured" unless @__configured_auth__
+
+        class << Sinatra.application
           def event(method, path, options = {}, &b)
             super
             Basic.add_auth_paths(path)
           end
         end
-
+        
         yield
 
-        class << @app
+        class << Sinatra.application
           remove_method :event
         end
       end
+      
     end
 
   end
 end
 
-
-#
-# some default configuration
-configure do
-  set :auth_paths, []
-  set :auth_realm, 'Sinatra Auth'
-end
-
 include Sinatra::Auth::Helpers
-
-
 
