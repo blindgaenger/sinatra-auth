@@ -1,0 +1,37 @@
+h1. Sinatra-Auth
+
+I know, I know! There are already some implementations out there. Please don't 
+ask me why ... I just did it! Just let me put my stuff to all the other projects, 
+ok? Now it's up to you. :)
+
+* "Sinatra Basic Authentication - Selectively Applied":http://www.gittr.com/index.php/archive/sinatra-basic-authentication-selectively-applied/
+  <br/>You'll find similar *DIY* implementations in many sinatra projects (e.g. sinatra-wiki, ...)
+
+* "sbfaulkner / sinatra_authentication":http://github.com/sbfaulkner/sinatra_authentication
+  <br/>Like DIY, but uses Rack::Auth in a nice *helper*. Easy to use for models classes.
+
+* "blindgaenger / sinatra-auth":http://github.com/blindgaenger/sinatra-auth &laquo; Yep, this project!
+  <br/>Adds Rack::Auth as *middleware* and checks protected routes before dispatching to sinatra.
+
+* "maxjustus / sinatra-authentication":http://github.com/maxjustus/sinatra-authentication
+  <br/>If you need *session based* authentication using DataMapper, this is for you!
+
+* "Sinatra Lighthouse [PATCH] HTTP Authentication":http://sinatra.lighthouseapp.com/projects/9779/tickets/16-patch-http-authentication
+  <br/>But actually I really hope any HTTP authentication will become an *integrated part* of sinatra!
+
+Done?
+
+h2. Installation
+
+  sudo gem source --add http://gems.github.com
+  sudo gem install blindgaenger-sinatra-auth
+
+h2. Usage
+
+TODO
+
+h2. Contact
+
+You can contact me via mail at blindgaenger at gmail dot com, or leave me a 
+message on my "Github profile":http://github.com/blindgaenger.
+
