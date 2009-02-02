@@ -3,6 +3,7 @@ h1. Sinatra-Auth
 I know, I know! There are already some implementations out there. Please don't 
 ask me why ... I just did it!
 
+
 h2. Your choice
 
 Just let me put my stuff to all the other projects, ok? Now it's up to you. :)
@@ -24,14 +25,38 @@ Just let me put my stuff to all the other projects, ok? Now it's up to you. :)
 
 Done?
 
+
 h2. Installation
 
   sudo gem source --add http://gems.github.com
   sudo gem install blindgaenger-sinatra-auth
 
+
 h2. Usage
 
-TODO
+Use @auth@ to configure @:basic@ authorization and the realm @My App@. The block
+checks your creditals.
+
+  configure do
+    auth :basic, "My App" do |username, password|
+      username == 'foo' && password = 'bar'
+    end
+  end    
+
+Define your routes as usual, but now you can @protect@ some of them.
+
+  get '/public' do
+    'free'
+  end
+
+  protect do
+    get '/private' do
+      'secret'
+    end
+  end
+
+Done!
+
 
 h2. Contact
 
